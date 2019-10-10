@@ -1,7 +1,13 @@
 version: '2'
 services:
+  redis:
+    image: redis:5.0
+    expose:
+    - "6379"
+    ports:
+    - "6379:6379"
   mysql:
-    image: registry.cn-beijing.aliyuncs.com/xianshuangzhang/argus-db:1.0.0
+    image: registry.cn-beijing.aliyuncs.com/xianshuangzhang/argus-db:1.0.3
     environment:
       MYSQL_ROOT_PASSWORD: "123456"
     expose:
@@ -13,6 +19,7 @@ services:
     command: /usr/local/tomcat/bin/catalina.sh run
     depends_on:
     - mysql
+    - redis
     restart: always
     ports:
     - "8080:8080"
