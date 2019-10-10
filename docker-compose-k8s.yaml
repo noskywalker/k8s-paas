@@ -1,0 +1,31 @@
+version: '2'
+services:
+  mysql:
+    image: mysql:5.7.14
+    environment:
+      MYSQL_ROOT_PASSWORD: "admin"
+    expose:
+      - "3306"
+    ports:
+      - "3306:3306"
+  rabbitmq:
+    environment:
+      RABBITMQ_NODENAME: "rb"
+      RABBITMQ_DEFAULT_USER: "user"
+      RABBITMQ_DEFAULT_PASS: "user"
+    image: rabbitmq:3.6.14-management-alpine
+    expose:
+      - "5672"
+    ports:
+      - "5672:5672"
+  kplcloud:
+    image: registry.cn-beijing.aliyuncs.com/xianshuangzhang/k8s:2.0.0
+    command: /go/bin/server start -p :8080 -c /etc/cfg/app.cfg -k /etc/cfg/config.yaml
+    environment:
+      GOPATH: "/go"
+    depends_on:
+      - mysql
+      - rabbitmq
+    restart: always
+    ports:
+      - "8080:8080"
